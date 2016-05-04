@@ -1,7 +1,7 @@
 /***************************************************************
-* file: DoubleIt.java
+* file: FPCameraController.java
 * author: J. Dao, P. Santos, I. Berger
-* class: CS 141 – Programming and Problem Solving
+* class: CS 445 - Computer Graphics
 *
 * assignment: Quarter Project
 * date last modified: 5/4/2016
