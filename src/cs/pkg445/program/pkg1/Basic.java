@@ -1,142 +1,102 @@
-/**
- * *************************************************************
- * file: Basic.java author: ?????????????????????? class: CS 445 – Computer
- * Graphics
- * 
-* assignment: final program date last modified: 4/27/2016 * purpose:
- * **************************************************************
- */
+/***************************************************************
+* file: DoubleIt.java
+* author: J. Dao, P. Santos, I. Berger
+* class: CS 141 – Programming and Problem Solving
+*
+* assignment: Quarter Project
+* date last modified: 5/4/2016
+*
+* purpose: This program simulates a first person camera by displaying
+* a cube and allowing a user to navigate the environment.
+****************************************************************/ 
 package cs.pkg445.program.pkg1;
-
+//
+import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 
-public class Basic {
+public class Basic
+{
+
+    private FPCameraController fp = new FPCameraController(0f, 0f, 0f);
+    private DisplayMode displayMode;
+   
     // method: start
     // purpose: create window, initialize OpenGL, print instructions, and run the main loop
-
-    public void start() {
-        try {
+    public void start()
+    {
+        try
+        {
             createWindow();
             initGL();
-            printInstructions();
             run();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
+    
     // method: createWindow
     // purpose: creates a nonfullscreen window with resolution 640x480 with title "Final Program"
-
-    private void createWindow() throws Exception {
+    private void createWindow() throws Exception
+    {
         Display.setFullscreen(false);
-        Display.setDisplayMode(new DisplayMode(640, 480));
+        DisplayMode d[] = Display.getAvailableDisplayModes();
+        for (int i = 0; i < d.length; i++)
+        {
+            if (d[i].getWidth() == 640
+                    && d[i].getHeight() == 480
+                    && d[i].getBitsPerPixel() == 32)
+            {
+                displayMode = d[i];
+                break;
+            }
+        }
+        Display.setDisplayMode(displayMode);
         Display.setTitle("Final Program");
         Display.create();
-    }
-    // method: initGL
-    // purpose: initialize OpenGL's coordinate system with the orgin at the center of the window and set the background to black
 
-    private void initGL() {
+    }
+    
+    // method: initGL
+    // purpose: initialize OpenGL and set the background to black
+    private void initGL()
+    {
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        GLU.gluPerspective(100f, (float)Display.getWidth()/(float)Display.getHeight(), 0.1f, 300f);
+        GLU.gluPerspective(100f, (float) Display.getWidth() / (float) Display.getHeight(), 0.1f, 300f);
         glMatrixMode(GL_MODELVIEW);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
     }
-    // method: render
-    // purpose: 
-
-    private void render() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glLoadIdentity();
-        glTranslatef(0,0,0f);
-        glBegin(GL_QUADS);
-        glColor3f(0.0f, 1.0f, 0.0f);          // Set The Color To Green
-        glVertex3f(1.0f, 1.0f, -1.0f);          // Top Right Of The Quad (Top)
-        glVertex3f(-1.0f, 1.0f, -1.0f);          // Top Left Of The Quad (Top)
-        glVertex3f(-1.0f, 1.0f, 1.0f);          // Bottom Left Of The Quad (Top)
-        glVertex3f(1.0f, 1.0f, 1.0f);          // Bottom Right Of The Quad (Top)
-
-        glColor3f(1.0f, 0.5f, 0.0f);          // Set The Color To Orange
-        glVertex3f(1.0f, -1.0f, 1.0f);          // Top Right Of The Quad (Bottom)
-        glVertex3f(-1.0f, -1.0f, 1.0f);          // Top Left Of The Quad (Bottom)
-        glVertex3f(-1.0f, -1.0f, -1.0f);          // Bottom Left Of The Quad (Bottom)
-        glVertex3f(1.0f, -1.0f, -1.0f);          // Bottom Right Of The Quad (Bottom
-
-        glColor3f(1.0f, 0.0f, 0.0f);          // Set The Color To Red
-        glVertex3f(1.0f, 1.0f, 1.0f);          // Top Right Of The Quad (Front)
-        glVertex3f(-1.0f, 1.0f, 1.0f);          // Top Left Of The Quad (Front)
-        glVertex3f(-1.0f, -1.0f, 1.0f);          // Bottom Left Of The Quad (Front)
-        glVertex3f(1.0f, -1.0f, 1.0f);          // Bottom Right Of The Quad (Front)
-
-        glColor3f(1.0f, 1.0f, 0.0f);          // Set The Color To Yellow
-        glVertex3f(1.0f, -1.0f, -1.0f);          // Bottom Left Of The Quad (Back)
-        glVertex3f(-1.0f, -1.0f, -1.0f);          // Bottom Right Of The Quad (Back)
-        glVertex3f(-1.0f, 1.0f, -1.0f);          // Top Right Of The Quad (Back)
-        glVertex3f(1.0f, 1.0f, -1.0f);          // Top Left Of The Quad (Back)
-
-        glColor3f(0f, 0f, 1.0f);          // Set The Color To Blue
-        glVertex3f(1.0f, -1.0f, -1.0f);          // Back Bottom Left Of The Quad (Left)
-        glVertex3f(1.0f, 1.0f, -1.0f);          // Back Top Left Of The Quad (Left)
-        glVertex3f(1.0f, 1.0f, 1.0f);          // Front Top Left Of The Quad (Left)
-        glVertex3f(1.0f, -1.0f, 1.0f);          // Front Bottom Left Of The Quad (Left)
-
-        glColor3f(1.0f, 0f, 1.0f);          // Set The Color To Purple
-        glVertex3f(-1.0f, -1.0f, -1.0f);          // Back Bottom Right Of The Quad (Right)
-        glVertex3f(1.0f, 1.0f, -1.0f);          // Back Top Right Of The Quad (Right)
-        glVertex3f(-1.0f, 1.0f, 1.0f);          // Front Top Right Of The Quad (Right)
-        glVertex3f(-1.0f, -1.0f, 1.0f);          // Front Bottom Right Of The Quad (Right)
-        glEnd();
-    }
+    
     // method: run
-    // purpose: main loop, updates display at 60Hz while it has not been requested to close
-
-    public void run() {
-        while (!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-            render();
-            processKeyboard();
-            Display.update();
-            Display.sync(60);
-        }
-        Display.destroy();
-    }
-    // method: processKeyboard
-    // purpose: respond to specified keyboard inputs: see comments for response to each input
-
-    public void processKeyboard() {
-        int dz = 0;
-        if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-            System.exit(0);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            glTranslatef(0f, 0f, 0f);
-            System.out.println("test");
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+    // purpose: main loop and runs the program by using gameloop.
+    public void run()
+    {
+        while (!Display.isCloseRequested())
+        {
+            try
+            {
+                fp.gameLoop();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
-    // method: printInstructions
-    // purpose: Print instructions to console for user input
-//Yooo
-    private void printInstructions() {
-        System.out.println("Controls:");
-        System.out.println("ESC - Quit");
-    }
     // method: main
     // purpose: entry point for program, runs the start method
-
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         Basic basic = new Basic();
         basic.start();
     }
