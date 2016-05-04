@@ -10,10 +10,7 @@
 * a cube and allowing a user to navigate the environment.
 ****************************************************************/ 
 package cs.pkg445.program.pkg1;
-//
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+
 import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.DisplayMode;
@@ -33,6 +30,7 @@ public class Basic
         {
             createWindow();
             initGL();
+			printInstructions();
             run();
         } catch (Exception e)
         {
@@ -76,6 +74,17 @@ public class Basic
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
     }
+	
+	// method: printInstructions
+	// purpose: print control instructions to the standard output
+	private void printInstructions(){
+		System.out.println("W - move forward");
+		System.out.println("S - move backward");
+		System.out.println("A - strafe left");
+		System.out.println("D - strafe right");
+		System.out.println("Shift - move down");
+		System.out.println("Space - move up");
+	}
     
     // method: run
     // purpose: main loop and runs the program by using gameloop.
