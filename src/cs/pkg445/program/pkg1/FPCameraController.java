@@ -24,6 +24,7 @@ public class FPCameraController
     private Vector3f lPosition = null;
     private float yaw = 0.0f;
     private float pitch = 0.0f;
+	private Chunk chunk;
 
     // Constructor: FPCameraController
     // purpose: intializes variables 
@@ -34,6 +35,7 @@ public class FPCameraController
         lPosition.x = 0f;
         lPosition.y = 15f;
         lPosition.z = 0f;
+		chunk = new Chunk(0, 0,	0);
     }
 
     // method: yaw
@@ -183,11 +185,11 @@ public class FPCameraController
                 //look through the camera before you draw anything
                 camera.lookThrough();
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                render();
+                //render();
+				chunk.render();
                 Display.update();
                 Display.sync(60);
-            } catch (Exception e)
-            {
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }
