@@ -19,29 +19,26 @@ import org.lwjgl.util.glu.GLU;
 public class Basic
 {
 
-    private FPCameraController fp = new FPCameraController(0f, 0f, 0f);
+    private FPCameraController fp;
     private DisplayMode displayMode;
    
     // method: start
     // purpose: create window, initialize OpenGL, print instructions, and run the main loop
-    public void start()
-    {
-        try
-        {
+    public void start(){
+        try{
             createWindow();
             initGL();
 			printInstructions();
+			fp = new FPCameraController(0f, 0f, 0f);
             run();
-        } catch (Exception e)
-        {
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
     
     // method: createWindow
     // purpose: creates a nonfullscreen window with resolution 640x480 with title "Final Program"
-    private void createWindow() throws Exception
-    {
+    private void createWindow() throws Exception {
         Display.setFullscreen(false);
         DisplayMode d[] = Display.getAvailableDisplayModes();
         for (int i = 0; i < d.length; i++)
@@ -62,8 +59,7 @@ public class Basic
     
     // method: initGL
     // purpose: initialize OpenGL and set the background to black
-    private void initGL()
-    {
+    private void initGL(){
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -72,7 +68,13 @@ public class Basic
         GLU.gluPerspective(100f, (float) Display.getWidth() / (float) Display.getHeight(), 0.1f, 300f);
         glMatrixMode(GL_MODELVIEW);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
+		
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+		glEnable(GL_DEPTH_TEST);
+		
+		glEnable(GL_TEXTURE_2D);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 	
 	// method: printInstructions
@@ -88,15 +90,11 @@ public class Basic
     
     // method: run
     // purpose: main loop and runs the program by using gameloop.
-    public void run()
-    {
-        while (!Display.isCloseRequested())
-        {
-            try
-            {
+    public void run(){
+        while (!Display.isCloseRequested()){
+            try{
                 fp.gameLoop();
-            } catch (Exception e)
-            {
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }
@@ -104,8 +102,7 @@ public class Basic
 
     // method: main
     // purpose: entry point for program, runs the start method
-    public static void main(String[] args)
-    {
+    public static void main(String[] args){
         Basic basic = new Basic();
         basic.start();
     }
