@@ -28,6 +28,7 @@ public class Chunk {
 	private int VBOColorHandle;
 	private int startX, startY, startZ;
 	private Random r;
+	private SimplexNoise noiseGen;
 	
 	private int VBOTextureHandle;
 	private Texture texture;
@@ -57,7 +58,7 @@ public class Chunk {
 		FloatBuffer vertexTextureData = BufferUtils.createFloatBuffer((CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE)*6*12);
 		for(float x=0; x<CHUNK_SIZE; x++)
 			for(float z=0; z<CHUNK_SIZE; z++)
-				for(float y=0; y<CHUNK_SIZE; y++){
+				for(float y=0; y<20+noiseGen.getNoise((int)x, (int)z)*10; y++){
 					vertexPositionData.put(createCube((float)(startX+x*CUBE_LENGTH), (float)(startY+y*CUBE_LENGTH+(int)(CHUNK_SIZE*.8)), (float)(startZ+z*CUBE_LENGTH)));
 					vertexColorData.put(createCubeVertexCol(getCubeColor(blocks[(int)x][(int)y][(int)z])));
 					vertexTextureData.put(createTexCube(0f, 0f, blocks[(int)x][(int)y][(int)z]));
@@ -229,10 +230,14 @@ public class Chunk {
 		}
 		
 		r = new Random();
+		noiseGen = new SimplexNoise(10, .4d, r.nextInt());
+		
+		
 		blocks = new Block[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
 		for(int x=0; x<CHUNK_SIZE; x++){
-			for(int y=0; y<CHUNK_SIZE; y++){
-				for(int z=0; z<CHUNK_SIZE; z++){
+			for(int z=0; z<CHUNK_SIZE; z++){
+				System.out.print(noiseGen.getNoise(x, z)*10 + "\t");
+				for(int y=0; y<20+noiseGen.getNoise(x, z)*10; y++){
 					float randomValue = r.nextFloat();
 					if(randomValue>5/6f){
 						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
@@ -249,6 +254,7 @@ public class Chunk {
 					}
 				}
 			}
+			System.out.println();
 		}
 		VBOColorHandle = glGenBuffers();
 		VBOVertexHandle = glGenBuffers();
