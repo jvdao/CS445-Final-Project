@@ -4,10 +4,10 @@
 * class: CS 141 – Programming and Problem Solving
 *
 * assignment: Quarter Project
-* date last modified: 5/4/2016
+* date last modified: 5/16/2016
 *
-* purpose: This program simulates a first person camera by displaying
-* a cube and allowing a user to navigate the environment.
+* purpose: This program create a 30x30x30 minecraft chunk filled with random 
+* blocks that are either grass, dirt, sand, stone, bedrock, or water.
 ****************************************************************/ 
 package cs.pkg445.program.pkg1;
 
@@ -18,6 +18,7 @@ import org.lwjgl.util.glu.GLU;
 
 public class Basic
 {
+	
 
     private FPCameraController fp;
     private DisplayMode displayMode;

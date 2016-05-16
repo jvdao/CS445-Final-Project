@@ -4,10 +4,10 @@
 * class: CS 445 - Computer Graphics
 *
 * assignment: Quarter Project
-* date last modified: 5/4/2016
+* date last modified: 5/16/2016
 *
-* purpose: This program simulates a first person camera by displaying
-* a cube and allowing a user to navigate the environment.
+* purpose: This code creates a first person camera with standard controls, and 
+* adds a minecraft chunk as described in Basic.java to the world.
 ****************************************************************/ 
 package cs.pkg445.program.pkg1;
 

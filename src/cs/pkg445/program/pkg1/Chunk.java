@@ -1,8 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/***************************************************************
+* file: Chunk.java
+* author: J. Dao, P. Santos, I. Berger
+* class: CS 445 - Computer Graphics
+*
+* assignment: Quarter Project
+* date last modified: 5/16/2016
+*
+* purpose: Chunk class that creates a chunk starting at a position specified in 
+* the constructor using simplexNoise to randomly generate the terrain height and
+* shape of the chunk and renders it as a mesh using OpenGL.
+****************************************************************/ 
 package cs.pkg445.program.pkg1;
 
 import java.nio.FloatBuffer;
@@ -10,18 +17,13 @@ import java.util.Random;
 import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
-
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
-/**
- *
- * @author ianberger
- */
 public class Chunk {
 	
-	public static final boolean PRINT_NOISE_VALUES = false;
+	public static final boolean PRINT_NOISE_VALUES = false;//Print 2D array of noise values used to determine chunk height
 	
 	static final int CHUNK_SIZE = 30;
 	static final int CUBE_LENGTH = 2;
@@ -35,6 +37,8 @@ public class Chunk {
 	private int VBOTextureHandle;
 	private Texture texture;
 	
+	// method: render
+    // purpose: render this chunk as a single mesh
 	public void render(){
 		glPushMatrix();
 		
@@ -51,6 +55,8 @@ public class Chunk {
 		
 		glPopMatrix();
 	}
+	// method: rebuildMesh
+    // purpose: rebuild mesh of this chunk so it reflects any changes
 	public void rebuildMesh(float startX, float startY, float startZ){
 		VBOColorHandle = glGenBuffers();
 		VBOVertexHandle = glGenBuffers();
@@ -60,10 +66,12 @@ public class Chunk {
 		FloatBuffer vertexTextureData = BufferUtils.createFloatBuffer((CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE)*6*12);
 		for(float x=0; x<CHUNK_SIZE; x++)
 			for(float z=0; z<CHUNK_SIZE; z++)
-				for(float y=0; y<25+noiseGen.getNoise((int)x, (int)z)*5; y++){
-					vertexPositionData.put(createCube((float)(startX+x*CUBE_LENGTH), (float)(startY+y*CUBE_LENGTH+(int)(CHUNK_SIZE*.8)), (float)(startZ+z*CUBE_LENGTH)));
-					vertexColorData.put(createCubeVertexCol(getCubeColor(blocks[(int)x][(int)y][(int)z])));
-					vertexTextureData.put(createTexCube(0f, 0f, blocks[(int)x][(int)y][(int)z]));
+				for(float y=0; y<CHUNK_SIZE; y++){
+					if(blocks[(int)x][(int)y][(int)z].isActive()){
+						vertexPositionData.put(createCube((float)(startX+x*CUBE_LENGTH), (float)(startY+y*CUBE_LENGTH+(int)(CHUNK_SIZE*.8)), (float)(startZ+z*CUBE_LENGTH)));
+						vertexColorData.put(createCubeVertexCol(getCubeColor(blocks[(int)x][(int)y][(int)z])));
+						vertexTextureData.put(createTexCube(0f, 0f, blocks[(int)x][(int)y][(int)z]));
+					}
 				}
 		vertexColorData.flip();
 		vertexPositionData.flip();
@@ -79,13 +87,16 @@ public class Chunk {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		
 	}
-	
+	// method: createCubeVertexCol
+    // purpose: return an array with the contents of cubeColorArray repeated six times for each face of the cube as OpenGL expects
 	private float[] createCubeVertexCol(float[] cubeColorArray){
 		float[] cubeColors = new float[cubeColorArray.length*4*6];
 		for(int i=0; i<cubeColors.length; i++)
 			cubeColors[i] = cubeColorArray[i%cubeColorArray.length];
 		return cubeColors;
 	}
+	// method: createTexCube
+    // purpose: return an array with the texture mappings that correspond to the block type of block
 	public static float[] createTexCube(float x, float y, Block block){
 		float offset = (1024f/16)/1024f;
 		
@@ -128,13 +139,15 @@ public class Chunk {
 				return sameTextureOnAllSides(x, y, offset, 14, 0);
 			case 3://Dirt
 				return sameTextureOnAllSides(x, y, offset, 2, 0);
-			case 4:
+			case 4://Stone
 				return sameTextureOnAllSides(x, y, offset, 1, 0);
-			case 5:
+			case 5://Bedrock
 				return sameTextureOnAllSides(x, y, offset, 1, 1);
 		}
 		throw new RuntimeException("No texture mapping for block id: " + block.getId());
 	}
+	// method: sameTextureOnAllSides
+    // purpose: helper function that returns the texture map array for a block with the same texture on all six of its faces based on the block location in the texture file specified by left and top
 	private static float[] sameTextureOnAllSides(float x, float y, float offset, float left, float top){
 		float right = left+1;
 		float bottom = top+1;
@@ -170,7 +183,8 @@ public class Chunk {
 			x+offset*right, y+offset*top,
 			x+offset*left, y+offset*top};
 	}
-	
+	// method: createCube
+    // purpose: return an array with the vextex data of a cube cented and x, y, z
 	public static float[] createCube(float x, float y, float z){
 		int offset = CUBE_LENGTH/2;
 		return new float[]{
@@ -206,6 +220,8 @@ public class Chunk {
 			x+offset, y-offset, z
 		};
 	}
+	// method: getCubeColor
+    // purpose: when using texture mapping, returns an array with the RGB value of white. Otherwise it returns an array with the color value of the faces of block based on its block type
 	private float [] getCubeColor(Block block){
 		return new float[]{1,1,1};
 //		switch(block.getId()){
@@ -224,6 +240,8 @@ public class Chunk {
 //		}
 //		return new float[]{1,1,1};//Default - White
 	}
+	// Constructor: Chunk
+    // purpose: intializes variables and creates a chunk starting at startX, startY, startZ using simplexNoise to randomly generate the terrain height and shape of the chunk
 	public Chunk(int startX, int startY, int startZ){
 		try{
 			texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("terrain.png"));
@@ -240,7 +258,7 @@ public class Chunk {
 			for(int z=0; z<CHUNK_SIZE; z++){
 				if(PRINT_NOISE_VALUES)
 					System.out.print(noiseGen.getNoise(x, z)*5 + "\t");
-				for(int y=0; y<25+noiseGen.getNoise(x, z)*5; y++){
+				for(int y=0; y<CHUNK_SIZE; y++){
 					float randomValue = r.nextFloat();
 					if(randomValue>5/6f){
 						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
@@ -254,6 +272,10 @@ public class Chunk {
 						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
 					}else{
 						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
+					}
+					
+					if(y >= 25+noiseGen.getNoise(x, z)*5){
+						blocks[x][y][z].setActive(false);
 					}
 				}
 			}
