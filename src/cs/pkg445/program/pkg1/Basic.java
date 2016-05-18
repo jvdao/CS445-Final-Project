@@ -16,8 +16,7 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 
-public class Basic
-{
+public class Basic{
 	
 
     private FPCameraController fp;

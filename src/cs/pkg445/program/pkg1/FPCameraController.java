@@ -4,7 +4,7 @@
 * class: CS 445 - Computer Graphics
 *
 * assignment: Quarter Project
-* date last modified: 5/16/2016
+* date last modified: 5/18/2016
 *
 * purpose: This code creates a first person camera with standard controls, and 
 * adds a minecraft chunk as described in Basic.java to the world.
@@ -38,9 +38,15 @@ public class FPCameraController{
     }
 
     // method: pitch
-    // purpose: increment the pitch by the amount param
+    // purpose: decrement the pitch by the amount param and keep it from allowing the camera to turn upside down
     public void pitch(float amount){
         pitch -= amount;
+		if(pitch<-90){
+			pitch = -90;
+		}
+		if(pitch>90){
+			pitch = 90;
+		}
     }
 
     // method: walkFoward
