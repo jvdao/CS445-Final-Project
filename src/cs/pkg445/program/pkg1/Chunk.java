@@ -260,19 +260,27 @@ public class Chunk {
 					System.out.print(noiseGen.getNoise(x, z)*5 + "\t");
 				for(int y=0; y<CHUNK_SIZE; y++){
 					float randomValue = r.nextFloat();
-					if(randomValue>5/6f){
-						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
-					}else if(randomValue>4/6f){
-						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
-					}else if(randomValue>3/6f){
-						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
-					}else if(randomValue>2/6f){
-						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-					}else if(randomValue>1/6f){
-						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
-					}else{
+                                        if(y == 0){
 						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
+                                        }
+					else if(y >= 24 + noiseGen.getNoise(x, z)*5){
+                                                int randomNum = r.nextInt(3);
+                                                if(randomNum == 0)
+                                                    blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
+                                                else if(randomNum == 1)
+                                                    blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
+                                                else if(randomNum == 2)
+                                                    blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
 					}
+                                        else if(y < 24+noiseGen.getNoise(x, z)*5){
+                                            int randomNum = r.nextInt(2);
+                                            if(randomNum == 0)
+						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
+                                            else
+						blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
+					}
+                                        else
+                                            blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
 					
 					if(y >= 25+noiseGen.getNoise(x, z)*5){
 						blocks[x][y][z].setActive(false);
