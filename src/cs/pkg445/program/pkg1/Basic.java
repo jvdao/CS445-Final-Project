@@ -11,6 +11,8 @@
 ****************************************************************/ 
 package cs.pkg445.program.pkg1;
 
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.DisplayMode;
@@ -21,6 +23,8 @@ public class Basic{
 
     private FPCameraController fp;
     private DisplayMode displayMode;
+	private FloatBuffer lightPosition;
+	private FloatBuffer whiteLight;
    
     // method: start
     // purpose: create window, initialize OpenGL, print instructions, and run the main loop
@@ -75,7 +79,24 @@ public class Basic{
 		
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		
+		initLightArrays();
+		glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+		glLight(GL_LIGHT0, GL_SPECULAR, whiteLight);
+		glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight);
+		glLight(GL_LIGHT0, GL_AMBIENT, whiteLight);
+		
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
     }
+	
+	private void initLightArrays(){
+		lightPosition = BufferUtils.createFloatBuffer(4);
+		lightPosition.put(0f).put(0f).put(0f).put(1f).flip();
+		
+		whiteLight = BufferUtils.createFloatBuffer(4);
+		whiteLight.put(1f).put(1f).put(1f).put(0f).flip();
+	}
 	
 	// method: printInstructions
 	// purpose: print control instructions to the standard output

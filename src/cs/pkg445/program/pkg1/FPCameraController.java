@@ -4,13 +4,15 @@
 * class: CS 445 - Computer Graphics
 *
 * assignment: Quarter Project
-* date last modified: 5/18/2016
+* date last modified: 5/29/2016
 *
 * purpose: This code creates a first person camera with standard controls, and 
 * adds a minecraft chunk as described in Basic.java to the world.
 ****************************************************************/ 
 package cs.pkg445.program.pkg1;
 
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -56,6 +58,10 @@ public class FPCameraController{
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
         position.x -= xOffset;
         position.z += zOffset;
+		
+		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+		lightPosition.put(position.x-=xOffset).put(position.y).put(position.z+=zOffset).put(1f).flip();
+		glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
     // method: walkBackwards
@@ -65,6 +71,10 @@ public class FPCameraController{
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
         position.x += xOffset;
         position.z -= zOffset;
+		
+		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+		lightPosition.put(position.x+=xOffset).put(position.y).put(position.z-=zOffset).put(1f).flip();
+		glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
     // method: strafeLeft
@@ -74,6 +84,10 @@ public class FPCameraController{
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw - 90));
         position.x -= xOffset;
         position.z += zOffset;
+		
+		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+		lightPosition.put(position.x-=xOffset).put(position.y).put(position.z+=zOffset).put(1f).flip();
+		glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
     // method: strafeRight
@@ -83,6 +97,10 @@ public class FPCameraController{
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw + 90));
         position.x -= xOffset;
         position.z += zOffset;
+		
+		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+		lightPosition.put(position.x-=xOffset).put(position.y).put(position.z+=zOffset).put(1f).flip();
+		glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
     // method: moveUp
@@ -106,6 +124,10 @@ public class FPCameraController{
         glRotatef(yaw, 0.0f, 1.0f, 0.0f);
         //translate to the position vector's location
         glTranslatef(position.x, position.y, position.z);
+		
+		FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+		lightPosition.put(position.x).put(position.y).put(position.z).put(1f).flip();
+		glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
     // method: gameLoop
