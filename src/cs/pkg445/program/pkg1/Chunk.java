@@ -4,7 +4,7 @@
 * class: CS 445 - Computer Graphics
 *
 * assignment: Quarter Project
-* date last modified: 5/16/2016
+* date last modified: 5/27/2016
 *
 * purpose: Chunk class that creates a chunk starting at a position specified in 
 * the constructor using simplexNoise to randomly generate the terrain height and
