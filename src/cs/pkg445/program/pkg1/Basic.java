@@ -4,7 +4,7 @@
 * class: CS 141 – Programming and Problem Solving
 *
 * assignment: Quarter Project
-* date last modified: 5/16/2016
+* date last modified: 5/27/2016
 *
 * purpose: This program create a 30x30x30 minecraft chunk filled with random 
 * blocks that are either grass, dirt, sand, stone, bedrock, or water.
@@ -90,6 +90,8 @@ public class Basic{
 		glEnable(GL_LIGHT0);
     }
 	
+	// method: initLightArrays
+    // purpose: initialize light arrays to be used with OpenGL
 	private void initLightArrays(){
 		lightPosition = BufferUtils.createFloatBuffer(4);
 		lightPosition.put(0f).put(0f).put(0f).put(1f).flip();
