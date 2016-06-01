@@ -4,7 +4,7 @@
 * class: CS 141 – Programming and Problem Solving
 *
 * assignment: Quarter Project
-* date last modified: 5/27/2016
+* date last modified: 5/29/2016
 *
 * purpose: This program create a 30x30x30 minecraft chunk filled with random 
 * blocks that are either grass, dirt, sand, stone, bedrock, or water.
